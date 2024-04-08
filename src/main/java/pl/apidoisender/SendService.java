@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -26,6 +27,7 @@ public class SendService {
 
         File file = new File("file.csv");
         Scanner scanner = new Scanner(file);
+        FileWriter fileLogs = new FileWriter("result.txt");
         RestTemplate restTemplate = new RestTemplate();
 
 
@@ -55,18 +57,25 @@ public class SendService {
                     if(result.getBody().isSuccess()){
                         logger.info("Successes send email to: " + email + " with ID: " + emailId + ". Result: " +
                                 result.getBody());
+                        fileLogs.write("Successes send email to: " + email + " with ID: " + emailId + ". Result: " +
+                                result.getBody());
                     } else {
                         logger.error("Error during  send email to " + email + " with ID: " + emailId + ". Result: "
+                                + result.getBody());
+                        fileLogs.write("Error during  send email to " + email + " with ID: " + emailId + ". Result: "
                                 + result.getBody());
                     }
                 } else {
                     logger.error("Cannot send email to " + email + " with ID: " + emailId + ". Result: " + result.getBody());
+                    fileLogs.write("Cannot send email to " + email + " with ID: " + emailId + ". Result: " + result.getBody());
                 }
             } catch (Exception e) {
-                logger.error("error during send an email: " + e);
+                logger.error("Error during send an email: " + e);
+                fileLogs.write("Error during send an email: " + email + ". Reason: " + e);
             }
         }
         scanner.close();
+        fileLogs.close();
     }
 
 }

@@ -1,0 +1,1 @@
+Error during send an email: mati. Reason: java.lang.IllegalArgumentException: URI is not absolute
